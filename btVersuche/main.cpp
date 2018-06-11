@@ -1,7 +1,10 @@
-﻿#include "MainObject.hpp"
+﻿#include <QDebug>
+#include "MainObject.hpp"
 
 int main( int argc, char *argv[] )
 {
-  MainObject m( argc, argv );
-  return m.exec();
+  qDebug() << "start...";
+  return ( 1 );
+  // MainObject m( argc, argv );
+  // return m.exec();
 }
