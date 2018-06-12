@@ -3,8 +3,8 @@
 
 namespace spx
 {
-  BTDevice::BTDevice(Logger *log, const char *dAddr ) :
-    ABTDevice( log, dAddr ),
+  LocalBTDevice::LocalBTDevice(Logger *log, const char *dAddr ) :
+    LocalBTDevice( log, dAddr ),
     btSocket( INVALID_SOCKET ),
     winsockChecked(false),
     discoverWorker( nullptr ),
@@ -14,8 +14,8 @@ namespace spx
     initWinsock();
   }
 
-  BTDevice::BTDevice(Logger *log, const QByteArray& dAddr ) :
-    ABTDevice( log, dAddr ),
+  LocalBTDevice::LocalBTDevice(Logger *log, const QByteArray& dAddr ) :
+    LocalBTDevice( log, dAddr ),
     btSocket( INVALID_SOCKET ),
     winsockChecked(false),
     discoverWorker( nullptr ),
@@ -25,8 +25,8 @@ namespace spx
     initWinsock();
   }
 
-  BTDevice::BTDevice(const char *dAddr ) :
-    ABTDevice( dAddr ),
+  LocalBTDevice::LocalBTDevice(const char *dAddr ) :
+    LocalBTDevice( dAddr ),
     btSocket( INVALID_SOCKET ),
     winsockChecked(false),
     discoverWorker( nullptr ),
@@ -36,8 +36,8 @@ namespace spx
     initWinsock();
   }
 
-  BTDevice::BTDevice(const QByteArray& dAddr) :
-    ABTDevice( dAddr ),
+  LocalBTDevice::LocalBTDevice(const QByteArray& dAddr) :
+    LocalBTDevice( dAddr ),
     btSocket( INVALID_SOCKET ),
     winsockChecked(false),
     discoverWorker( nullptr ),
@@ -47,7 +47,7 @@ namespace spx
     initWinsock();
   }
 
-  BTDevice::~BTDevice()
+  LocalBTDevice::~LocalBTDevice()
   {
     if( winsockChecked )
     {
@@ -56,7 +56,7 @@ namespace spx
     killThreads();
   }
 
-  int BTDevice::initWinsock(void)
+  int LocalBTDevice::initWinsock(void)
   {
     ZeroMemory( &WSAData, sizeof( WSAData ) );
     if( ProjectConst::CXN_SUCCESS != ::WSAStartup( MAKEWORD( 2, 2 ), &WSAData ))
@@ -75,17 +75,17 @@ namespace spx
     return( 0 );
   }
 
-  void BTDevice::startCommWorker()
+  void LocalBTDevice::startCommWorker()
   {
     killThreads();
     commWorker = new BTCommWorker(this, lg, btSocket);
-    connect( commWorker, &BTCommWorker::btConnectErrorSig, this, &BTDevice::connectErrorSlot, Qt::DirectConnection );
-    connect( commWorker, &BTCommWorker::btDisconnectSig, this, &BTDevice::disconnectSlot, Qt::DirectConnection );
-    connect( commWorker, &BTCommWorker::btDataRecivedSig, this, &BTDevice::btDataRecivedSlot, Qt::DirectConnection );
+    connect( commWorker, &BTCommWorker::btConnectErrorSig, this, &LocalBTDevice::connectErrorSlot, Qt::DirectConnection );
+    connect( commWorker, &BTCommWorker::btDisconnectSig, this, &LocalBTDevice::disconnectSlot, Qt::DirectConnection );
+    connect( commWorker, &BTCommWorker::btDataRecivedSig, this, &LocalBTDevice::btDataRecivedSlot, Qt::DirectConnection );
     commWorker->start();
   }
 
-  void BTDevice::discoverDevices(void)
+  void LocalBTDevice::discoverDevices(void)
   {
     //
     // erst mal alles abschiessen
@@ -94,10 +94,10 @@ namespace spx
     lg->debug("WinBTDevice::discoverDevices....");
     discoverWorker  = new BTDiscoverThread( this, lg );
     lg->debug("WinBTDevice::discoverDevices -> connect signals...");
-    connect( discoverWorker, &BTDiscoverThread::btDiscoveringSig, this, &BTDevice::btDiscoveringSlot, Qt::DirectConnection );
-    connect( discoverWorker, &BTDiscoverThread::newDeviceFoundSig, this, &BTDevice::btNewDeviceFoundSlot, Qt::DirectConnection );
-    connect( discoverWorker, &BTDiscoverThread::btDiscoverEndSig, this, &BTDevice::btDiscoverEndSlot );
-    connect( discoverWorker, &BTDiscoverThread::btConnectErrorSig, this, &BTDevice::connectErrorSlot );
+    connect( discoverWorker, &BTDiscoverThread::btDiscoveringSig, this, &LocalBTDevice::btDiscoveringSlot, Qt::DirectConnection );
+    connect( discoverWorker, &BTDiscoverThread::newDeviceFoundSig, this, &LocalBTDevice::btNewDeviceFoundSlot, Qt::DirectConnection );
+    connect( discoverWorker, &BTDiscoverThread::btDiscoverEndSig, this, &LocalBTDevice::btDiscoverEndSlot );
+    connect( discoverWorker, &BTDiscoverThread::btConnectErrorSig, this, &LocalBTDevice::connectErrorSlot );
     lg->debug("WinBTDevice::discoverDevices -> startThread...");
     discoverWorker->start();
   }
@@ -105,7 +105,7 @@ namespace spx
   /**
    * Verbinde mit dem BT Gerät, falls initialisierung erfolgreich
    */
-  int BTDevice::connectBT( void )
+  int LocalBTDevice::connectBT( void )
   {
     if( ! winsockChecked )
     {
@@ -135,10 +135,10 @@ namespace spx
       //
       connectWorker = new BTConnectThread( this, lg, deviceAddr, pin, btSocket );
       // Signale verbinden
-      connect( connectWorker, &BTConnectThread::btConnectingSig, this, &BTDevice::connectingSlot, Qt::DirectConnection );
-      connect( connectWorker, &BTConnectThread::btConnectedSig, this, &BTDevice::connectSlot, Qt::DirectConnection );
-      connect( connectWorker, &BTConnectThread::btDisconnectSig, this, &BTDevice::disconnectSlot, Qt::DirectConnection );
-      connect( connectWorker, &BTConnectThread::btConnectErrorSig, this, &BTDevice::connectErrorSlot, Qt::DirectConnection );
+      connect( connectWorker, &BTConnectThread::btConnectingSig, this, &LocalBTDevice::connectingSlot, Qt::DirectConnection );
+      connect( connectWorker, &BTConnectThread::btConnectedSig, this, &LocalBTDevice::connectSlot, Qt::DirectConnection );
+      connect( connectWorker, &BTConnectThread::btDisconnectSig, this, &LocalBTDevice::disconnectSlot, Qt::DirectConnection );
+      connect( connectWorker, &BTConnectThread::btConnectErrorSig, this, &LocalBTDevice::connectErrorSlot, Qt::DirectConnection );
       //
       // Thread starten
       //
@@ -148,7 +148,7 @@ namespace spx
     return( -1 );
   }
 
-  int BTDevice::connectBT(const char *dAddr , const char *pi )
+  int LocalBTDevice::connectBT(const char *dAddr , const char *pi )
   {
     deviceAddr = QByteArray( dAddr );
     if( pi != nullptr )
@@ -158,7 +158,7 @@ namespace spx
     return(connectBT());
   }
 
-  int BTDevice::connectBT(const QByteArray& dAddr , const QByteArray& pi)
+  int LocalBTDevice::connectBT(const QByteArray& dAddr , const QByteArray& pi)
   {
     deviceAddr = QByteArray( dAddr );
     if( pi != nullptr )
@@ -168,7 +168,7 @@ namespace spx
     return(connectBT());
   }
 
-  int BTDevice::write( const char *str, int len )
+  int LocalBTDevice::write( const char *str, int len )
   {
     if( commWorker != nullptr )
     {
@@ -177,7 +177,7 @@ namespace spx
     return( 0 );
   }
 
-  int BTDevice::write( const QByteArray& cmd )
+  int LocalBTDevice::write( const QByteArray& cmd )
   {
     if( commWorker != nullptr )
     {
@@ -192,7 +192,7 @@ namespace spx
    * @param maxlen
    * @return
    */
-  int BTDevice::read( char *dest, int maxlen )
+  int LocalBTDevice::read( char *dest, int maxlen )
   {
     int cplen;
     //
@@ -206,12 +206,12 @@ namespace spx
     return( cplen );
   }
 
-  int BTDevice::avail( void )
+  int LocalBTDevice::avail( void )
   {
     return( recBuffer.length() );
   }
 
-  bool BTDevice::spxPDUAvail(void)
+  bool LocalBTDevice::spxPDUAvail(void)
   {
     //
     // erfrage ob es einen Anfang und ein Ende einer SPX-PDU gibt
@@ -241,7 +241,7 @@ namespace spx
     return( false );
   }
 
-  bool BTDevice::removeCrLf(void)
+  bool LocalBTDevice::removeCrLf(void)
   {
     int crChar, lfChar;
     bool wasRemove;
@@ -261,7 +261,7 @@ namespace spx
     return( wasRemove );
   }
 
-  QByteArray BTDevice::getSpxPDU(void)
+  QByteArray LocalBTDevice::getSpxPDU(void)
   {
     //
     // erfrage ob es einen Anfang und ein Ende einer SPX-PDU gibt
@@ -301,7 +301,7 @@ namespace spx
   /**
    * Trenne Verbindung und entferne Socket wenn vorhanden, ansonsten tue NIX
    */
-  int BTDevice::disconnectBT( void )
+  int LocalBTDevice::disconnectBT( void )
   {
     lg->debug( "WinBTDevice::disconnectBT..." );
     if( isInitOk != IndicatorStati::AERROR && btSocket != INVALID_SOCKET )
@@ -311,8 +311,8 @@ namespace spx
       // Thread hier lokal sichtbar lassen, er löscht sich später selber mit deleteLater()
       //
       BTDisconnectThread *disconnectWorker = new BTDisconnectThread( this, lg, btSocket );
-      connect( disconnectWorker, &BTDisconnectThread::btDisconnectSig, this, &BTDevice::disconnectSlot, Qt::DirectConnection );
-      connect( disconnectWorker, &BTDisconnectThread::btConnectErrorSig, this, &BTDevice::connectErrorSlot, Qt::DirectConnection );
+      connect( disconnectWorker, &BTDisconnectThread::btDisconnectSig, this, &LocalBTDevice::disconnectSlot, Qt::DirectConnection );
+      connect( disconnectWorker, &BTDisconnectThread::btConnectErrorSig, this, &LocalBTDevice::connectErrorSlot, Qt::DirectConnection );
       //
       // Thread starten
       //
@@ -321,7 +321,7 @@ namespace spx
     return( ProjectConst::CXN_SUCCESS );
   }
 
-  bool BTDevice::isConnected()
+  bool LocalBTDevice::isConnected()
   {
     if( commWorker != nullptr && commWorker->isRunning() )
     {
@@ -330,7 +330,7 @@ namespace spx
     return( false );
   }
 
-  QString BTDevice::getErrorText( int errnr, qint64 langId ) const
+  QString LocalBTDevice::getErrorText( int errnr, qint64 langId ) const
   {
     DWORD result;
     LPTSTR lpBuffer = nullptr;
@@ -360,14 +360,14 @@ namespace spx
     return(recBuffer);
   }
 #endif
-  void BTDevice::killThreads(void)
+  void LocalBTDevice::killThreads(void)
   {
     removeDiscoverWorker();
     removeConnectWorker();
     removeCommWorker();
   }
 
-  void BTDevice::removeDiscoverWorker(void)
+  void LocalBTDevice::removeDiscoverWorker(void)
   {
     //
     if( discoverWorker != nullptr )
@@ -397,7 +397,7 @@ namespace spx
     }
   }
 
-  void BTDevice::removeConnectWorker(void)
+  void LocalBTDevice::removeConnectWorker(void)
   {
     //
     // Keine Nullpointer Exceptions riskieren
@@ -429,7 +429,7 @@ namespace spx
     }
   }
 
-  void BTDevice::removeCommWorker(void)
+  void LocalBTDevice::removeCommWorker(void)
   {
     //
     // Keine Nullpointer Exceptions riskieren
@@ -461,53 +461,53 @@ namespace spx
     }
   }
 
-  void BTDevice::btDiscoveringSlot(void)
+  void LocalBTDevice::btDiscoveringSlot(void)
   {
     lg->debug( "WinBTDevice::btDiscoveringSlot...");
     emit btDiscoveringSig();
   }
 
-  void BTDevice::btNewDeviceFoundSlot(BluetoothDeviceDescriber *device )
+  void LocalBTDevice::btNewDeviceFoundSlot(BluetoothDeviceDescriber *device )
   {
     lg->debug(QString("WinBTDevice::btDeviceDiscoveredSlot -> device found, addr: <").append(device->getAddr()).append(">"));
     emit btDeviceDiscoveredSig(device);
   }
 
-  void BTDevice::btDiscoverEndSlot(void)
+  void LocalBTDevice::btDiscoverEndSlot(void)
   {
     lg->debug("WinBTDevice::btDiscoverEndSlot -> send signal, set delete thread");
-    QTimer::singleShot(100, this, &BTDevice::removeConnectWorker);
+    QTimer::singleShot(100, this, &LocalBTDevice::removeConnectWorker);
     emit btDiscoverEndSig();
   }
 
 
-  void BTDevice::connectingSlot(void)
+  void LocalBTDevice::connectingSlot(void)
   {
     lg->debug("WinBTDevice::connectSlot...");
     emit btConnectingSig();
   }
 
-  void BTDevice::connectSlot(const QByteArray& dAddr)
+  void LocalBTDevice::connectSlot(const QByteArray& dAddr)
   {
     lg->debug("WinBTDevice::connectSlot...");
-    QTimer::singleShot(1, this, &BTDevice::startCommWorker);
+    QTimer::singleShot(1, this, &LocalBTDevice::startCommWorker);
     emit btConnectedSig(dAddr);
   }
 
-  void BTDevice::disconnectSlot(void)
+  void LocalBTDevice::disconnectSlot(void)
   {
     lg->debug("WinBTDevice::disconnectSlot...");
     //killThreads();
     emit btDisconnectSig();
   }
 
-  void BTDevice::connectErrorSlot(int errnr)
+  void LocalBTDevice::connectErrorSlot(int errnr)
   {
     lg->debug("WinBTDevice::connectErrorSlot...");
     emit btConnectErrorSig(errnr);
   }
 
-  void BTDevice::btDataRecivedSlot( const char * data, int len )
+  void LocalBTDevice::btDataRecivedSlot( const char * data, int len )
   {
     lg->debug("WinBTDevice::btDataRecivedSlot...");
     recBuffer.append(data, len);

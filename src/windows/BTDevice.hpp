@@ -28,7 +28,7 @@ namespace spx
   /**
    * @brief The WinBTDevice class Die BT Geräteklasse für WINDOWS
    */
-  class BTDevice : public ABTDevice
+  class LocalBTDevice : public ABTDevice
   {
     private:
       Q_OBJECT
@@ -46,11 +46,11 @@ namespace spx
       QByteArray recBuffer;                                //! Puffer für empfangene Daten (reentrant!)
 
     public:
-      BTDevice( Logger *log, const char *dAddr );       //! Logger, MAC-Adressec_string oder NULL
-      BTDevice( Logger *log, const QByteArray& dAddr ); //! Logger, MAC-Adressec_string oder NULL
-      BTDevice( const char *dName = nullptr );          //! MAC-Adressec_string oder NULL
-      BTDevice( const QByteArray& dAddr );              //! MAC-Adressec_string oder NULL
-      virtual ~BTDevice();                              //! Destruktor zum aufräumen
+      LocalBTDevice( Logger *log, const char *dAddr );       //! Logger, MAC-Adressec_string oder NULL
+      LocalBTDevice( Logger *log, const QByteArray& dAddr ); //! Logger, MAC-Adressec_string oder NULL
+      LocalBTDevice( const char *dName = nullptr );          //! MAC-Adressec_string oder NULL
+      LocalBTDevice( const QByteArray& dAddr );              //! MAC-Adressec_string oder NULL
+      virtual ~LocalBTDevice();                              //! Destruktor zum aufräumen
       virtual void discoverDevices(void);                  //! Asyncron, finde BT-Geräte, sende Signal bei Finden
       virtual int connectBT( void );                       //! verbinde bei vorhandenem Gerätenamen
       virtual int connectBT( const char *dAddr, const char *pi = nullptr ); //! verbinde zu Addr

@@ -23,7 +23,7 @@
 #include "guiFragments/LogFragment.hpp"
 #include "guiFragments/ChartsFragment.hpp"
 #include "utils/SPX42Config.hpp"
-#include "bluetooth/ABTDevice.hpp"
+#include "bluetooth/LocalBTDevice.hpp"
 
 namespace Ui
 {
@@ -48,7 +48,7 @@ namespace spx
       AppConfigClass cf;                                        //! Konfiguration aus Datei
       ApplicationTab currentTab;                                //! welcher Tab ist aktiv?
       QStringList tabTitle;                                     //! Tab Titel (nicht statisch, das Objekt gibts eh nur einmal)
-      std::shared_ptr<ABTDevice> btDevice;                      //! Das Blauzahnobjekt, im Konstruktor zu erzeugen
+      std::shared_ptr<LocalBTDevice> btDevice;                      //! Das Blauzahnobjekt, im Konstruktor zu erzeugen
 
     public:
       explicit SPX42ControlMainWin(QWidget *parent = 0);
