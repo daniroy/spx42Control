@@ -2,7 +2,6 @@
 #### Installer erzeugen für das Projekt                                     ####
 ################################################################################
 win32:INSTBINDIR                       = C:/Qt/Tools/QtInstallerFramework/3.0/bin
-win32:DEPLOYBIN                        = $$PWD/tools/makeDeliverBuild.cmd
 macx:INSTBINDIR                        = /dev/null
 
 INSTALLERBASE                          = $$INSTBINDIR/installerbase
@@ -11,7 +10,6 @@ REPOGEN_BIN                            = $$INSTBINDIR/repogen
 CONFIGDIR                              = ../config
 PACKAGESDIR                            = ../packages
 REPOSITORYS                            = app,qtRuntime
-REPOSITORY_DEST                        = spx42ControlOfflineUpdater
 INPUT                                  = $$CONFIGDIR/config.xml
 INSTALLER                              = ../spx42ControlOfflineInstaller-0.5.1
 

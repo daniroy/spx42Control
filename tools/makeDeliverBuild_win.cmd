@@ -55,7 +55,7 @@ if "%MAKE_DONE%" == "false" goto false_end
 
 echo Deployment... 
 SET MAKE_DONE=false
-%WINDEPLOY% --%PROJECTTYPE% --no-quick-import --no-system-d3d-compiler --compiler-runtime --no-opengl-sw "out" && SET MAKE_DONE=true
+%WINDEPLOY% --%PROJECTTYPE% --no-quick-import --no-system-d3d-compiler --no-opengl-sw "out" && SET MAKE_DONE=true
 
 :: falls das falsch ist, zum Ende kommen
 if "%MAKE_DONE%" == "false" goto false_end
@@ -103,9 +103,10 @@ echo erzeuge das installerprogramm
 cd %INSTALLERBASE%\tool
 echo verzeichnis %cd%
 
-%QT_QMAKE% spx42ControlOnlineInstaller.pro -Wall -spec  win32-msvc "CONFIG -= release"
-%QT_JOM% release && SET MAKE_DONE=true
 %QT_QMAKE% spx42ControlOfflineInstaller.pro -Wall -spec  win32-msvc "CONFIG -= release"
+%QT_JOM% release && SET MAKE_DONE=true
+
+%QT_QMAKE% spx42ControlOnlineInstaller.pro -Wall -spec  win32-msvc "CONFIG -= release"
 %QT_JOM% release && SET MAKE_DONE=true
 
 :false_end
