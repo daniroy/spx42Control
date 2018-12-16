@@ -512,7 +512,7 @@ namespace spx
           lg->debug( "DeviceConfigFragment::onDatagramRecivedSlot -> firmwareversion..." );
           // Setzte die Version in die Config
           spxConfig->setSpxFirmwareVersion( recCommand->getParamAt( SPXCmdParam::FIRMWARE_VERSION ) );
-          spxConfig->freezeConfigs( SPX42ConfigClass::CFCLASS_SPX );
+          spxConfig->freezeConfigs( SPX42ConfigClass::CF_CLASS_SPX );
           // Geht das Datum zu setzen?
           if ( spxConfig->getCanSetDate() )
           {
@@ -528,7 +528,7 @@ namespace spx
           // ~07:XXX -> Seriennummer als String
           lg->debug( "DeviceConfigFragment::onDatagramRecivedSlot -> serialnumber..." );
           spxConfig->setSerialNumber( recCommand->getParamAt( SPXCmdParam::SERIAL_NUMBER ) );
-          spxConfig->freezeConfigs( SPX42ConfigClass::CFCLASS_SPX );
+          spxConfig->freezeConfigs( SPX42ConfigClass::CF_CLASS_SPX );
           setGuiConnected( remoteSPX42->getConnectionStatus() == SPX42RemotBtDevice::SPX42_CONNECTED );
           break;
         case SPX42CommandDef::SPX_LICENSE_STATE:
@@ -540,7 +540,7 @@ namespace spx
           lg->debug( "DeviceConfigFragment::onDatagramRecivedSlot -> license state..." );
           spxConfig->setLicense( recCommand->getParamAt( SPXCmdParam::LICENSE_STATE ),
                                  recCommand->getParamAt( SPXCmdParam::LICENSE_INDIVIDUAL ) );
-          spxConfig->freezeConfigs( SPX42ConfigClass::CFCLASS_SPX );
+          spxConfig->freezeConfigs( SPX42ConfigClass::CF_CLASS_SPX );
           setGuiConnected( remoteSPX42->getConnectionStatus() == SPX42RemotBtDevice::SPX42_CONNECTED );
           break;
         case SPX42CommandDef::SPX_GET_SETUP_DEKO:
@@ -577,7 +577,7 @@ namespace spx
           ui->dynamicGradientsOnCheckBox->setCheckState(
               recCommand->getValueAt( SPXCmdParam::DECO_DYNGRADIENTS ) == 1 ? Qt::CheckState::Checked : Qt::CheckState::Unchecked );
           ui->lastDecoStopComboBox->setCurrentIndex( recCommand->getValueAt( SPXCmdParam::DECO_LASTSTOP ) == 1 ? 1 : 0 );
-          spxConfig->freezeConfigs( SPX42ConfigClass::CFCLASS_DECO );
+          spxConfig->freezeConfigs( SPX42ConfigClass::CF_CLASS_DECO );
           connectSlots( SIGNALS_DECOMPRESSION );
           break;
         case SPX42CommandDef::SPX_GET_SETUP_SETPOINT:
@@ -635,7 +635,7 @@ namespace spx
               ui->setpointSetpointComboBox->setCurrentIndex( 4 );
               break;
           }
-          spxConfig->freezeConfigs( SPX42ConfigClass::CFCLASS_SETPOINT );
+          spxConfig->freezeConfigs( SPX42ConfigClass::CF_CLASS_SETPOINT );
           connectSlots( SIGNALS_SETPOINT );
           break;
         case SPX42CommandDef::SPX_GET_SETUP_DISPLAYSETTINGS:
@@ -702,7 +702,7 @@ namespace spx
               ui->displayOrientationComboBox->setCurrentIndex( 1 );
               break;
           }
-          spxConfig->freezeConfigs( SPX42ConfigClass::CFCLASS_DISPLAY );
+          spxConfig->freezeConfigs( SPX42ConfigClass::CF_CLASS_DISPLAY );
           connectSlots( SIGNALS_DISPLAY );
           break;
         case SPX42CommandDef::SPX_GET_SETUP_UNITS:
@@ -761,7 +761,7 @@ namespace spx
               ui->unitsWaterTypeComboBox->setCurrentIndex( 1 );
               break;
           }
-          spxConfig->freezeConfigs( SPX42ConfigClass::CFCLASS_UNITS );
+          spxConfig->freezeConfigs( SPX42ConfigClass::CF_CLASS_UNITS );
           connectSlots( SIGNALS_UNITS );
           break;
         case SPX42CommandDef::SPX_GET_SETUP_INDIVIDUAL:
@@ -854,7 +854,7 @@ namespace spx
               ui->individualTempStickComboBox->setCurrentIndex( 2 );
               break;
           }
-          spxConfig->freezeConfigs( SPX42ConfigClass::CFCLASS_INDIVIDUAL );
+          spxConfig->freezeConfigs( SPX42ConfigClass::CF_CLASS_INDIVIDUAL );
           connectSlots( SIGNALS_INDIVIDUAL );
           break;
       }

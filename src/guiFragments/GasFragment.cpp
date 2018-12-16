@@ -427,7 +427,7 @@ namespace spx
           lg->debug( "GasFragment::onCommandRecivedSlot -> firmwareversion..." );
           // Setzte die Version in die Config
           spxConfig->setSpxFirmwareVersion( recCommand->getParamAt( SPXCmdParam::FIRMWARE_VERSION ) );
-          spxConfig->freezeConfigs( SPX42ConfigClass::CFCLASS_SPX );
+          spxConfig->freezeConfigs( SPX42ConfigClass::CF_CLASS_SPX );
           // Geht das Datum zu setzen?
           if ( spxConfig->getCanSetDate() )
           {
@@ -442,7 +442,7 @@ namespace spx
           // ~07:XXX -> Seriennummer als String
           lg->debug( "GasFragment::onCommandRecivedSlot -> serialnumber..." );
           spxConfig->setSerialNumber( recCommand->getParamAt( SPXCmdParam::SERIAL_NUMBER ) );
-          spxConfig->freezeConfigs( SPX42ConfigClass::CFCLASS_SPX );
+          spxConfig->freezeConfigs( SPX42ConfigClass::CF_CLASS_SPX );
           setGuiConnected( remoteSPX42->getConnectionStatus() == SPX42RemotBtDevice::SPX42_CONNECTED );
           break;
         case SPX42CommandDef::SPX_LICENSE_STATE:
@@ -454,7 +454,7 @@ namespace spx
           lg->debug( "GasFragment::onCommandRecivedSlot -> license state..." );
           spxConfig->setLicense( recCommand->getParamAt( SPXCmdParam::LICENSE_STATE ),
                                  recCommand->getParamAt( SPXCmdParam::LICENSE_INDIVIDUAL ) );
-          spxConfig->freezeConfigs( SPX42ConfigClass::CFCLASS_SPX );
+          spxConfig->freezeConfigs( SPX42ConfigClass::CF_CLASS_SPX );
           setGuiConnected( remoteSPX42->getConnectionStatus() == SPX42RemotBtDevice::SPX42_CONNECTED );
           break;
         case SPX42CommandDef::SPX_GET_SETUP_GASLIST:
@@ -483,7 +483,7 @@ namespace spx
           {
             // current parameter ist hier immer 0
           }
-          spxConfig->freezeConfigs( SPX42ConfigClass::CFCLASS_GASES );
+          spxConfig->freezeConfigs( SPX42ConfigClass::CF_CLASS_GASES );
           // GUI update
           updateCurrGasGUI( recGasNumber );
           connectSlots();

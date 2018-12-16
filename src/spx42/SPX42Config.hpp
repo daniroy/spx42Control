@@ -77,7 +77,7 @@ namespace spx
     QString getLicName( void ) const;                                    //! Textliche Darstellung der Lizenz
     SPX42Gas &getGasAt( int num );                                       //! Gib ein Gas mit der Nummer num vom SPX42 zurück
     void setGasAt( int num, const SPX42Gas &gas );                       //! setzte Gas mit der Nummer xxx in die Config
-    void resetConfig( quint8 classes = SPX42ConfigClass::CFCLASS_ALL );  //! Resetiere das Objekt
+    void resetConfig( quint8 classes = SPX42ConfigClass::CF_CLASS_ALL );  //! Resetiere das Objekt
     QString getSerialNumber( void ) const;                               //! Seriennummer des aktuellen SPX42 zurückgeben
     void setSerialNumber( const QString &serial );                       //! Seriennumemr des aktuellen SPX42 speichern
     void setCurrentPreset( DecompressionPreset presetType,
@@ -132,7 +132,7 @@ namespace spx
     bool getIsOldParamSorting() const;                                         //! alte Parameterordnung?
     bool getIsNewerDisplayBrightness() const;                                  //! neuere Helligkeitsabstufungen
     bool getIsSixMetersAutoSetpoint() const;                                   //! fünf oder sechs meter autosetpoint
-    void freezeConfigs( quint8 changed = SPX42ConfigClass::CFCLASS_ALL );      //! setzte die aktuelle Konfiguration als "gesichert"
+    void freezeConfigs( quint8 changed = SPX42ConfigClass::CF_CLASS_ALL );      //! setzte die aktuelle Konfiguration als "gesichert"
     quint8 getChangedConfig( void );                                           //! was ist geändert?
     quint8 getChangedGases( void );                                            //! welches Gas wurde geändert?
     QString geteUnitHashes( void );
